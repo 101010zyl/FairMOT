@@ -27,7 +27,7 @@ class opts(object):
     # system
     self.parser.add_argument('--gpus', default='2, 3',
                              help='-1 for CPU, use comma for multiple gpus')
-    self.parser.add_argument('--num_workers', type=int, default=8,
+    self.parser.add_argument('--num_workers', type=int, default=16,
                              help='dataloader threads. 0 for single-thread.')
     self.parser.add_argument('--not_cuda_benchmark', action='store_true',
                              help='disable when the input size is not fixed.')
@@ -75,9 +75,9 @@ class opts(object):
                              help='drop learning rate by 10.')
     self.parser.add_argument('--num_epochs', type=int, default=30,
                              help='total training epochs.')
-    self.parser.add_argument('--batch_size', type=int, default=12,
+    self.parser.add_argument('--batch_size', type=int, default=42,
                              help='batch size')
-    self.parser.add_argument('--master_batch_size', type=int, default=-1,
+    self.parser.add_argument('--master_batch_size', type=int, default=21,
                              help='batch size on the master gpu.')
     self.parser.add_argument('--num_iters', type=int, default=-1,
                              help='default: #samples / batch_size.')
@@ -124,7 +124,7 @@ class opts(object):
     self.parser.add_argument('--data_cfg', type=str,
                              default='../src/lib/cfg/data.json',
                              help='load data from cfg')
-    self.parser.add_argument('--data_dir', type=str, default='/home/zyf/dataset')
+    self.parser.add_argument('--data_dir', type=str, default='/root/autodl-tmp')
 
     # loss
     self.parser.add_argument('--mse_loss', action='store_true',

@@ -11,6 +11,7 @@ import argparse
 import motmetrics as mm
 import numpy as np
 import torch
+import time
 
 from tracker.multitracker import JDETracker
 from tracking_utils import visualization as vis
@@ -71,18 +72,19 @@ def eval_seq(opt, dataloader, data_type, result_filename, save_dir=None, show_im
     if save_dir:
         mkdir_if_missing(save_dir)
     tracker = JDETracker(opt, frame_rate=frame_rate)
-    timer = Timer()
+    timerrr = Timer()
     results = []
     frame_id = 0
+    time_start = time.time()
     #for path, img, img0 in dataloader:
     for i, (path, img, img0) in enumerate(dataloader):
         #if i % 8 != 0:
             #continue
         if frame_id % 20 == 0:
-            logger.info('Processing frame {} ({:.2f} fps)'.format(frame_id, 1. / max(1e-5, timer.average_time)))
+            logger.info('Processing frame {} ({:.2f} fps)'.format(frame_id, 1. / max(1e-5, timerrr.average_time)))
 
         # run tracking
-        timer.tic()
+        timerrr.tic()
         if use_cuda:
             blob = torch.from_numpy(img).cuda().unsqueeze(0)
         else:
@@ -99,22 +101,23 @@ def eval_seq(opt, dataloader, data_type, result_filename, save_dir=None, show_im
                 online_tlwhs.append(tlwh)
                 online_ids.append(tid)
                 #online_scores.append(t.score)
-        timer.toc()
+        timerrr.toc()
         # save results
         results.append((frame_id + 1, online_tlwhs, online_ids))
         #results.append((frame_id + 1, online_tlwhs, online_ids, online_scores))
         if show_image or save_dir is not None:
             online_im = vis.plot_tracking(img0, online_tlwhs, online_ids, frame_id=frame_id,
-                                          fps=1. / timer.average_time)
+                                          fps=1. / timerrr.average_time)
         if show_image:
             cv2.imshow('online_im', online_im)
         if save_dir is not None:
             cv2.imwrite(os.path.join(save_dir, '{:05d}.jpg'.format(frame_id)), online_im)
         frame_id += 1
+    print("Time elapsed: {:.2f} seconds".format(time.time() - time_start))
     # save results
     write_results(result_filename, results, data_type)
     #write_results_score(result_filename, results, data_type)
-    return frame_id, timer.average_time, timer.calls
+    return frame_id, timerrr.average_time, timerrr.calls
 
 
 def main(opt, data_root='/data/MOT16/train', det_root=None, seqs=('MOT16-05',), exp_name='demo',
@@ -169,7 +172,7 @@ def main(opt, data_root='/data/MOT16/train', det_root=None, seqs=('MOT16-05',), 
 
 
 if __name__ == '__main__':
-    os.environ['CUDA_VISIBLE_DEVICES'] = '1'
+    os.environ['CUDA_VISIBLE_DEVICES'] = '0, 1'
     opt = opts().init()
 
     if not opt.val_mot16:
@@ -248,17 +251,19 @@ if __name__ == '__main__':
         data_root = os.path.join(opt.data_dir, 'MOT15/images/train')
     if opt.val_mot20:
         seqs_str = '''MOT20-01
-                      MOT20-02
-                      MOT20-03
-                      MOT20-05
-                      '''
+        '''
+                    #   MOT20-02
+                    #   MOT20-03
+                    #   MOT20-05
+                    #   '''
         data_root = os.path.join(opt.data_dir, 'MOT20/images/train')
     if opt.test_mot20:
         seqs_str = '''MOT20-04
-                      MOT20-06
-                      MOT20-07
-                      MOT20-08
-                      '''
+        '''
+                    #   MOT20-06
+                    #   MOT20-07
+                    #   MOT20-08
+                    #   '''
         data_root = os.path.join(opt.data_dir, 'MOT20/images/test')
     seqs = [seq.strip() for seq in seqs_str.split()]
 
