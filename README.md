@@ -1,4 +1,39 @@
 # FairMOT
+[https://github.com/101010zyl/FairMOT](https://github.com/101010zyl/FairMOT)
+## 模式识别课设
+### 运行方式
+
+
+#### 训练
+首先用honeybee.py将数据集转换成MOT20的格式
+然后运行
+```
+sh experiments/mot20_ft_mix_dla34.sh
+```
+
+#### 运行
+首先下载权重文件，
+[https://drive.google.com/file/d/1R6NZXEWnDClQbMqze8jds7EZYhM2GkNk/view?usp=drive_link](https://drive.google.com/file/d/1R6NZXEWnDClQbMqze8jds7EZYhM2GkNk/view?usp=drive_link)
+然后运行
+```
+sh run_track.sh
+```
+权重文件的位置可以在run_track.sh中修改
+
+### 主要代码
+- honeybee.py
+- src/track.py
+- src/train.py
+- src/lib/models/networks/pose_dla_conv.py
+
+
+**如果跑不了，可能是因为加注释的过程中出现了错误，请使用[这个commit](https://github.com/101010zyl/FairMOT/commit/03e083f706abcd5de38915b7ad6c8a61f98794eb)中的代码**
+
+
+---
+---
+---
+
 [![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/a-simple-baseline-for-multi-object-tracking/multi-object-tracking-on-2dmot15-1)](https://paperswithcode.com/sota/multi-object-tracking-on-2dmot15-1?p=a-simple-baseline-for-multi-object-tracking)
 [![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/a-simple-baseline-for-multi-object-tracking/multi-object-tracking-on-mot16)](https://paperswithcode.com/sota/multi-object-tracking-on-mot16?p=a-simple-baseline-for-multi-object-tracking)
 [![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/a-simple-baseline-for-multi-object-tracking/multi-object-tracking-on-mot17)](https://paperswithcode.com/sota/multi-object-tracking-on-mot17?p=a-simple-baseline-for-multi-object-tracking)
